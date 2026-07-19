@@ -2,7 +2,7 @@
   "name": "ProFinance - Budget Tracker",
   "short_name": "ProFinance",
   "description": "A powerful budget and expense tracker app",
-  "start_url": "./Budget_tracker.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#4f46e5",
