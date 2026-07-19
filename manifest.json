@@ -1,0 +1,28 @@
+{
+  "name": "ProFinance - Budget Tracker",
+  "short_name": "ProFinance",
+  "description": "A powerful budget and expense tracker app",
+  "start_url": "./Budget_tracker.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://coresg-normal.trae.ai/api/v1/text_to_image?prompt=minimal%20modern%20finance%20wallet%20app%20icon%20blue%20purple%20gradient&image_size=square",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://coresg-normal.trae.ai/api/v1/text_to_image?prompt=minimal%20modern%20finance%20wallet%20app%20icon%20blue%20purple%20gradient&image_size=square",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://coresg-normal.trae.ai/api/v1/text_to_image?prompt=minimal%20modern%20finance%20wallet%20app%20icon%20blue%20purple%20gradient&image_size=square",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
