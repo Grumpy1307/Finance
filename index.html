@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ProFinance - Ultimate Budget Tracker</title>
     
     <!-- PWA Meta Tags -->
@@ -134,6 +134,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            height: 100dvh;
             padding: 0;
             gap: 0;
             background: var(--bg-main);
@@ -202,6 +203,29 @@
             50% { transform: translateY(-5px); }
             100% { transform: translateY(0px); }
         }
+
+        /* Safe Area and Transition Support */
+        .mobile-dock {
+            bottom: calc(1rem + env(safe-area-inset-bottom, 0px)) !important;
+        }
+
+        /* Drawer Overlay & Sheet animations */
+        #mobile-menu-overlay {
+            transition: opacity 0.25s ease-out;
+        }
+        #mobile-menu-sheet {
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+        }
+        
+        #content-area {
+            padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+        }
+        @media (min-width: 768px) {
+            #content-area {
+                padding-bottom: 1.5rem !important;
+            }
+        }
     </style>
     <script>
         // Chart.js Defaults for Fintech Light Theme
@@ -258,16 +282,16 @@
 <body class="app-layout">
 
     <!-- Mobile Nav (Floating Dock) -->
-    <div class="md:hidden fixed bottom-4 left-4 right-4 bg-[rgba(var(--bg-card-rgb),0.97)] backdrop-blur-2xl border border-white/70 dark:border-white/20 rounded-3xl flex justify-between items-center px-1.5 py-2 z-50 shadow-[0_30px_60px_-20px_rgba(79,70,229,0.4)] ring-2 ring-white/80 dark:ring-white/25">
+    <div class="md:hidden fixed left-4 right-4 bg-[rgba(var(--bg-card-rgb),0.97)] backdrop-blur-2xl border border-white/70 dark:border-white/20 rounded-3xl flex justify-between items-center px-1.5 py-2 z-50 shadow-[0_30px_60px_-20px_rgba(79,70,229,0.4)] ring-2 ring-white/80 dark:ring-white/25 mobile-dock">
         <button onclick="router.navigate('dashboard')" id="mobile-nav-dashboard" class="mobile-nav-item flex flex-col items-center justify-center w-14 h-16 rounded-2xl text-text-muted hover:text-primary hover:bg-primary/10 transition-all duration-300 group relative">
-            <i class="fa-solid fa-grid-2 text-xl mb-0.5 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[7px] font-sans tracking-widest uppercase font-bold text-text-muted">Home</span>
+            <i class="fa-solid fa-house text-xl mb-0.5 group-hover:scale-110 transition-transform"></i>
+            <span class="text-[8px] font-sans tracking-widest uppercase font-bold text-text-muted">Home</span>
             <div class="w-2.5 h-2.5 rounded-full bg-primary absolute -top-1.5 opacity-0 transition-opacity active-dot"></div>
         </button>
         
         <button onclick="router.navigate('transactions')" id="mobile-nav-transactions" class="mobile-nav-item flex flex-col items-center justify-center w-14 h-16 rounded-2xl text-text-muted hover:text-secondary hover:bg-secondary/10 transition-all duration-300 group relative">
             <i class="fa-solid fa-list-ul text-xl mb-0.5 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[7px] font-sans tracking-widest uppercase font-bold text-text-muted">Trans</span>
+            <span class="text-[8px] font-sans tracking-widest uppercase font-bold text-text-muted">Trans</span>
             <div class="w-2.5 h-2.5 rounded-full bg-secondary absolute -top-1.5 opacity-0 transition-opacity active-dot"></div>
         </button>
 
@@ -277,22 +301,16 @@
             </button>
         </div>
 
-        <button onclick="router.navigate('loans')" id="mobile-nav-loans" class="mobile-nav-item flex flex-col items-center justify-center w-14 h-16 rounded-2xl text-text-muted hover:text-[#8b5cf6] hover:bg-[#8b5cf6]/10 transition-all duration-300 group relative">
-            <i class="fa-solid fa-hand-holding-dollar text-xl mb-0.5 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[7px] font-sans tracking-widest uppercase font-bold text-text-muted">Loans</span>
-            <div class="w-2.5 h-2.5 rounded-full bg-[#8b5cf6] absolute -top-1.5 opacity-0 transition-opacity active-dot"></div>
-        </button>
-
         <button onclick="router.navigate('smartSave')" id="mobile-nav-smartSave" class="mobile-nav-item flex flex-col items-center justify-center w-14 h-16 rounded-2xl text-text-muted hover:text-[#10b981] hover:bg-[#10b981]/10 transition-all duration-300 group relative">
             <i class="fa-solid fa-piggy-bank text-xl mb-0.5 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[7px] font-sans tracking-widest uppercase font-bold text-text-muted">Save</span>
+            <span class="text-[8px] font-sans tracking-widest uppercase font-bold text-text-muted">Goals</span>
             <div class="w-2.5 h-2.5 rounded-full bg-[#10b981] absolute -top-1.5 opacity-0 transition-opacity active-dot"></div>
         </button>
 
-        <button onclick="router.navigate('analytics')" id="mobile-nav-analytics" class="mobile-nav-item flex flex-col items-center justify-center w-14 h-16 rounded-2xl text-text-muted hover:text-[#f59e0b] hover:bg-[#f59e0b]/10 transition-all duration-300 group relative">
-            <i class="fa-solid fa-chart-pie text-xl mb-0.5 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[7px] font-sans tracking-widest uppercase font-bold text-text-muted">Insights</span>
-            <div class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] absolute -top-1.5 opacity-0 transition-opacity active-dot"></div>
+        <button onclick="ui.openMobileMenu()" id="mobile-nav-more" class="mobile-nav-item flex flex-col items-center justify-center w-14 h-16 rounded-2xl text-text-muted hover:text-text-main hover:bg-hover transition-all duration-300 group relative">
+            <i class="fa-solid fa-bars-staggered text-xl mb-0.5 group-hover:scale-110 transition-transform"></i>
+            <span class="text-[8px] font-sans tracking-widest uppercase font-bold text-text-muted">More</span>
+            <div class="w-2.5 h-2.5 rounded-full bg-text-main absolute -top-1.5 opacity-0 transition-opacity active-dot"></div>
         </button>
     </div>
 
@@ -336,11 +354,6 @@
             </nav>
 
             <div class="flex items-center gap-2 md:gap-3">
-                <!-- Theme Toggle for Mobile -->
-                <button onclick="ui.toggleTheme()" class="md:hidden w-8 h-8 rounded-lg bg-hover text-text-muted flex items-center justify-center transition-all hover:text-primary">
-                    <i id="mobile-theme-icon" class="fa-solid fa-moon"></i>
-                </button>
-                
                 <div class="relative group">
                     <select id="global-month-select" class="appearance-none bg-surface border border-border-subtle text-xs md:text-sm rounded-lg md:rounded-xl px-3 md:px-4 py-1.5 md:py-2 pr-7 md:pr-8 outline-none focus:border-[#0ea5e9] font-bold text-text-main tracking-wide font-sans shadow-sm transition-all hover:border-[#94a3b8] cursor-pointer">
                     </select>
@@ -349,7 +362,11 @@
                     </div>
                 </div>
                 
-                <button onclick="ui.openUserModal(true)" class="inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl bg-primary text-white text-xs md:text-sm font-bold hover:bg-[#4338ca] transition-all shadow-[0_0_10px_rgba(79,70,229,0.3)] active:scale-95 font-sans tracking-wide uppercase">
+                <button onclick="ui.openSettingsModal()" class="hidden md:flex w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-hover border border-border-subtle text-text-muted hover:text-primary items-center justify-center transition-all cursor-pointer active:scale-95" title="App Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                
+                <button onclick="ui.openUserModal(true)" class="hidden md:inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl bg-primary text-white text-xs md:text-sm font-bold hover:bg-[#4338ca] transition-all shadow-[0_0_10px_rgba(79,70,229,0.3)] active:scale-95 font-sans tracking-wide uppercase">
                     <i class="fa-regular fa-user"></i>
                     <span class="hidden sm:inline">Profiles</span>
                 </button>
@@ -357,7 +374,7 @@
         </header>
 
         <!-- Scrollable Content -->
-        <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-6 pb-24 md:pb-6 scroll-smooth">
+        <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth">
             <!-- Dynamic Content Injected Here -->
         </div>
     </main>
@@ -441,6 +458,91 @@
                     </button>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Drawer (Slide up from bottom) -->
+    <div id="mobile-menu-overlay" class="md:hidden fixed inset-0 bg-black/60 z-[60] hidden backdrop-blur-sm opacity-0" onclick="ui.closeMobileMenu()">
+        <div id="mobile-menu-sheet" class="fixed bottom-0 left-0 right-0 bg-[rgba(var(--bg-card-rgb),0.97)] backdrop-blur-2xl border-t border-white/20 dark:border-white/10 rounded-t-[2rem] p-6 shadow-[0_-20px_40px_rgba(0,0,0,0.3)] transform translate-y-full flex flex-col gap-6" onclick="event.stopPropagation()">
+            <!-- Drag Indicator bar -->
+            <div class="w-12 h-1 bg-border-subtle rounded-full mx-auto mb-1 cursor-pointer" onclick="ui.closeMobileMenu()"></div>
+            
+            <div class="flex justify-between items-center">
+                <h3 class="text-sm font-bold text-text-main uppercase tracking-wider font-sans">Features</h3>
+                <button onclick="ui.closeMobileMenu()" class="w-8 h-8 rounded-full bg-hover flex items-center justify-center text-text-muted hover:text-text-main transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <!-- Grid of links -->
+            <div class="grid grid-cols-3 gap-4">
+                <button onclick="router.navigate('loans'); ui.closeMobileMenu();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-[#8b5cf6]/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[#8b5cf6]/10 text-[#8b5cf6] flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Loans</span>
+                </button>
+                
+                <button onclick="router.navigate('creditCards'); ui.closeMobileMenu();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-[#f43f5e]/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[#f43f5e]/10 text-[#f43f5e] flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Cards</span>
+                </button>
+                
+                <button onclick="router.navigate('insurance'); ui.closeMobileMenu();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-[#10b981]/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[#10b981]/10 text-[#10b981] flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Insurance</span>
+                </button>
+
+                <button onclick="router.navigate('analytics'); ui.closeMobileMenu();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-[#f59e0b]/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[#f59e0b]/10 text-[#f59e0b] flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Insights</span>
+                </button>
+
+                <button onclick="ui.openUserModal(true); ui.closeMobileMenu();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-primary/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Profiles</span>
+                </button>
+
+                <button onclick="ui.toggleTheme();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-text-main/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-hover text-text-muted flex items-center justify-center text-xl">
+                        <i id="drawer-theme-icon" class="fa-solid fa-moon"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Theme</span>
+                </button>
+
+                <button onclick="ui.openSettingsModal(); ui.closeMobileMenu();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-primary/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Settings</span>
+                </button>
+
+                <button onclick="ui.openBackupModal(); ui.closeMobileMenu();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-secondary/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Backup</span>
+                </button>
+
+                <button onclick="ui.openFinanceTipsModal(); ui.closeMobileMenu();" class="flex flex-col items-center gap-2 p-3 bg-hover rounded-2xl border border-border-subtle hover:border-amber-500/30 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main font-sans tracking-wide uppercase">Tips</span>
+                </button>
+            </div>
+            
+            <div class="text-center mt-1">
+                <p class="text-[9px] text-text-muted font-bold tracking-widest uppercase">ProFinance Dashboard</p>
             </div>
         </div>
     </div>
@@ -590,6 +692,315 @@
                 }
 
                 return utils.toTitleCase(cleaned);
+            }
+        };
+
+        const audio = {
+            playSuccess: () => {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.type = 'sine';
+                    const now = ctx.currentTime;
+                    osc.frequency.setValueAtTime(587.33, now); // D5
+                    osc.frequency.setValueAtTime(880.00, now + 0.08); // A5
+                    
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } catch (e) {
+                    console.log("Audio feedback blocked or not supported", e);
+                }
+            },
+            playNotification: () => {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.type = 'triangle';
+                    const now = ctx.currentTime;
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                    
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                } catch (e) {
+                    console.log("Audio blocked", e);
+                }
+            }
+        };
+
+        const alerts = {
+            getActiveAlerts: () => {
+                const list = [];
+                if (!store || !store.data) return list;
+                
+                const today = new Date();
+                const todayStr = today.toISOString().split('T')[0];
+                const notifSettings = store.data.settings?.notifications || {
+                    dailyReminder: true,
+                    dailyReminderTime: '20:00',
+                    paymentDueReminder: true,
+                    paymentReminderDaysBefore: 3
+                };
+                
+                // 1. Daily Track Reminder
+                if (notifSettings.dailyReminder) {
+                    const txsToday = (store.data.transactions || []).filter(t => t.date === todayStr);
+                    if (txsToday.length === 0) {
+                        list.push({
+                            id: 'daily-expense',
+                            type: 'warning',
+                            icon: 'fa-pen-to-square',
+                            color: 'text-amber-500',
+                            bg: 'bg-amber-500/10',
+                            border: 'border-amber-500/20',
+                            title: 'Daily Expense Track',
+                            desc: 'You haven\'t logged any transactions today. Keep your daily track updated!'
+                        });
+                    }
+                }
+                
+                // 2. Payment Due Reminders
+                if (notifSettings.paymentDueReminder) {
+                    const daysBefore = notifSettings.paymentReminderDaysBefore || 3;
+                    
+                    // Check Loans
+                    const activeLoans = (store.data.loans || []).filter(l => loanCalc.getDetails(l).currentOutstanding > 5);
+                    activeLoans.forEach(loan => {
+                        const dueDay = loan.dueDay || new Date(loan.startDate).getDate();
+                        const dueDate = new Date(today.getFullYear(), today.getMonth(), dueDay);
+                        if (dueDate < today) dueDate.setMonth(dueDate.getMonth() + 1);
+                        
+                        const diffTime = dueDate - today;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays >= 0 && diffDays <= daysBefore) {
+                            const { emi } = loanCalc.getDetails(loan);
+                            list.push({
+                                id: `loan-due-${loan.id}`,
+                                type: 'danger',
+                                icon: 'fa-hand-holding-dollar',
+                                color: 'text-[#8b5cf6]',
+                                bg: 'bg-[#8b5cf6]/10',
+                                border: 'border-[#8b5cf6]/20',
+                                title: 'Loan EMI Due',
+                                desc: `EMI of ${utils.formatCurrency(emi)} for "${loan.name}" is due in ${diffDays} day(s) (${dueDate.getDate()}th)!`
+                            });
+                        }
+                    });
+                    
+                    // Check Credit Cards
+                    const cards = store.data.creditCards || [];
+                    const txsAll = store.data.transactions || [];
+                    cards.forEach(c => {
+                        const cardTxs = txsAll.filter(t => t.accountId === c.id);
+                        const spent = cardTxs.filter(t => t.type === 'expense' && t.category !== 'Credit Card Bill').reduce((sum, t) => sum + (+t.amount || 0), 0);
+                        const paid = cardTxs.filter(t => t.category === 'Credit Card Bill').reduce((sum, t) => sum + (+t.amount || 0), 0);
+                        const balance = (+c.initialBalance || 0) + spent - paid; 
+                        
+                        if (balance > 10) {
+                            const dueDay = parseInt(c.dueDay);
+                            const dueDate = new Date(today.getFullYear(), today.getMonth(), dueDay);
+                            if (dueDate < today) dueDate.setMonth(dueDate.getMonth() + 1);
+                            
+                            const diffTime = dueDate - today;
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            
+                            if (diffDays >= 0 && diffDays <= daysBefore) {
+                                list.push({
+                                    id: `card-due-${c.id}`,
+                                    type: 'danger',
+                                    icon: 'fa-credit-card',
+                                    color: 'text-[#f43f5e]',
+                                    bg: 'bg-[#f43f5e]/10',
+                                    border: 'border-[#f43f5e]/20',
+                                    title: 'Card Bill Due',
+                                    desc: `Bill of ${utils.formatCurrency(balance)} for "${c.name}" is due in ${diffDays} day(s) (${c.dueDay}th)!`
+                                });
+                            }
+                        }
+                    });
+                    
+                    // Check Insurance
+                    const insurances = store.data.insurances || [];
+                    insurances.forEach(ins => {
+                        if (ins.nextDueDate) {
+                            const dueDate = new Date(ins.nextDueDate);
+                            const diffTime = dueDate - today;
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            
+                            if (diffDays >= 0 && diffDays <= daysBefore) {
+                                list.push({
+                                    id: `ins-due-${ins.id}`,
+                                    type: 'danger',
+                                    icon: 'fa-shield-halved',
+                                    color: 'text-[#10b981]',
+                                    bg: 'bg-[#10b981]/10',
+                                    border: 'border-[#10b981]/20',
+                                    title: 'Premium Due',
+                                    desc: `Premium of ${utils.formatCurrency(ins.premium)} for policy "${ins.provider}" is due in ${diffDays} day(s) (${dueDate.toLocaleDateString()})!`
+                                });
+                            }
+                        }
+                    });
+                }
+                
+                return list;
+            }
+        };
+
+        const notificationManager = {
+            requestPermission: async () => {
+                if (!('Notification' in window)) return false;
+                if (Notification.permission === 'granted') return true;
+                if (Notification.permission !== 'denied') {
+                    const status = await Notification.requestPermission();
+                    return status === 'granted';
+                }
+                return false;
+            },
+            
+            sendLocalNotification: (title, body, tag) => {
+                if (!('Notification' in window)) return;
+                if (Notification.permission !== 'granted') return;
+                
+                // Prevent duplicate notifications in the same browser session
+                if (tag && sessionStorage.getItem('notified_' + tag)) return;
+                
+                try {
+                    const options = {
+                        body: body,
+                        icon: './favicon.ico',
+                        tag: tag
+                    };
+                    new Notification(title, options);
+                    
+                    if (tag) {
+                        sessionStorage.setItem('notified_' + tag, 'true');
+                    }
+                    
+                    // Synthesize short notification chime!
+                    if (typeof audio !== 'undefined') {
+                        audio.playNotification();
+                    }
+                } catch (e) {
+                    console.error("Local web notification failed", e);
+                }
+            },
+            
+            runCheck: () => {
+                if (!store || !store.data || !store.data.settings) return;
+                const notifSettings = store.data.settings.notifications;
+                if (!notifSettings) return;
+                
+                const today = new Date();
+                const todayStr = today.toISOString().split('T')[0];
+                
+                // 1. Daily Track Reminder
+                if (notifSettings.dailyReminder) {
+                    const [remHour, remMin] = (notifSettings.dailyReminderTime || '20:00').split(':').map(Number);
+                    const currentHour = today.getHours();
+                    const currentMin = today.getMinutes();
+                    
+                    const isPastTime = (currentHour > remHour) || (currentHour === remHour && currentMin >= remMin);
+                    const lastNotifiedDate = localStorage.getItem('last_daily_notified_date');
+                    
+                    if (isPastTime && lastNotifiedDate !== todayStr) {
+                        const txsToday = (store.data.transactions || []).filter(t => t.date === todayStr);
+                        if (txsToday.length === 0) {
+                            notificationManager.sendLocalNotification(
+                                "Daily Expense Track",
+                                "You haven't logged any expenses today. Don't forget to keep your budget tracking daily!",
+                                "daily-reminder"
+                            );
+                            localStorage.setItem('last_daily_notified_date', todayStr);
+                        }
+                    }
+                }
+                
+                // 2. Due Payments Reminder
+                if (notifSettings.paymentDueReminder) {
+                    const daysBefore = notifSettings.paymentReminderDaysBefore || 3;
+                    
+                    // Scan active loans
+                    const activeLoans = (store.data.loans || []).filter(l => loanCalc.getDetails(l).currentOutstanding > 5);
+                    activeLoans.forEach(loan => {
+                        const dueDay = loan.dueDay || new Date(loan.startDate).getDate();
+                        const dueDate = new Date(today.getFullYear(), today.getMonth(), dueDay);
+                        if (dueDate < today) dueDate.setMonth(dueDate.getMonth() + 1);
+                        
+                        const diffTime = dueDate - today;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays >= 0 && diffDays <= daysBefore) {
+                            const { emi } = loanCalc.getDetails(loan);
+                            notificationManager.sendLocalNotification(
+                                "Loan EMI Due",
+                                `EMI of ${utils.formatCurrency(emi)} for "${loan.name}" is due in ${diffDays} day(s) (${dueDate.getDate()}th)!`,
+                                `loan-due-${loan.id}-${today.getMonth()}`
+                            );
+                        }
+                    });
+                    
+                    // Scan credit cards
+                    const cards = store.data.creditCards || [];
+                    const txsAll = store.data.transactions || [];
+                    cards.forEach(c => {
+                        const cardTxs = txsAll.filter(t => t.accountId === c.id);
+                        const spent = cardTxs.filter(t => t.type === 'expense' && t.category !== 'Credit Card Bill').reduce((sum, t) => sum + (+t.amount || 0), 0);
+                        const paid = cardTxs.filter(t => t.category === 'Credit Card Bill').reduce((sum, t) => sum + (+t.amount || 0), 0);
+                        const balance = (+c.initialBalance || 0) + spent - paid; 
+                        
+                        if (balance > 10) {
+                            const dueDay = parseInt(c.dueDay);
+                            const dueDate = new Date(today.getFullYear(), today.getMonth(), dueDay);
+                            if (dueDate < today) dueDate.setMonth(dueDate.getMonth() + 1);
+                            
+                            const diffTime = dueDate - today;
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            
+                            if (diffDays >= 0 && diffDays <= daysBefore) {
+                                notificationManager.sendLocalNotification(
+                                    "Card Bill Due",
+                                    `Your credit card "${c.name}" bill of ${utils.formatCurrency(balance)} is due in ${diffDays} day(s) (${c.dueDay}th)!`,
+                                    `card-due-${c.id}-${today.getMonth()}`
+                                );
+                            }
+                        }
+                    });
+                    
+                    // Scan insurance
+                    const insurances = store.data.insurances || [];
+                    insurances.forEach(ins => {
+                        if (ins.nextDueDate) {
+                            const dueDate = new Date(ins.nextDueDate);
+                            const diffTime = dueDate - today;
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            
+                            if (diffDays >= 0 && diffDays <= daysBefore) {
+                                notificationManager.sendLocalNotification(
+                                    "Insurance Premium Due",
+                                    `Premium of ${utils.formatCurrency(ins.premium)} for policy "${ins.provider}" is due in ${diffDays} day(s) (${dueDate.toLocaleDateString()})!`,
+                                    `ins-due-${ins.id}-${ins.nextDueDate}`
+                                );
+                            }
+                        }
+                    });
+                }
             }
         };
 
@@ -783,7 +1194,16 @@
                         income: ['Salary', 'Freelance', 'Investment', 'Other'],
                         expense: ['Food', 'Transport', 'Shopping', 'Utilities', 'Electricity Bill', 'Mobile Bill', 'Internet Bill', 'Gas Bill', 'Housing', 'Entertainment', 'Health', 'Education', 'Insurance Premium', 'Loan EMI', 'Other', 'Credit Card Bill', 'Diesel', 'Petrol', 'ATM Withdraw']
                     },
-                    settings: { currency: 'INR', monthlyTarget: 50000 },
+                    settings: { 
+                        currency: 'INR', 
+                        monthlyTarget: 50000,
+                        notifications: {
+                            dailyReminder: true,
+                            dailyReminderTime: '20:00',
+                            paymentDueReminder: true,
+                            paymentReminderDaysBefore: 3
+                        }
+                    },
                     auth: { loggedIn: false, user: null, passkeyId: null, passwordHash: null },
                     initialBankBalance: 0 // Base balance for net worth calculation
                 };
@@ -878,7 +1298,25 @@
                         expense: ['Food', 'Transport', 'Shopping', 'Utilities', 'Electricity Bill', 'Mobile Bill', 'Internet Bill', 'Gas Bill', 'Housing', 'Entertainment', 'Health', 'Education', 'Insurance Premium', 'Loan EMI', 'Other', 'Credit Card Bill', 'Diesel', 'Petrol', 'ATM Withdraw']
                     };
                 }
-                if (!this.data.settings) this.data.settings = { currency: 'INR', monthlyTarget: 50000 };
+                if (!this.data.settings) {
+                    this.data.settings = { 
+                        currency: 'INR', 
+                        monthlyTarget: 50000,
+                        notifications: {
+                            dailyReminder: true,
+                            dailyReminderTime: '20:00',
+                            paymentDueReminder: true,
+                            paymentReminderDaysBefore: 3
+                        }
+                    };
+                } else if (!this.data.settings.notifications) {
+                    this.data.settings.notifications = {
+                        dailyReminder: true,
+                        dailyReminderTime: '20:00',
+                        paymentDueReminder: true,
+                        paymentReminderDaysBefore: 3
+                    };
+                }
                 if (!this.data.auth) this.data.auth = { loggedIn: false, user: null, passkeyId: null, passwordHash: null };
                 if (this.data.initialBankBalance === undefined) this.data.initialBankBalance = 0;
 
@@ -980,6 +1418,7 @@
                 const paymentMode = tx && tx.paymentMode ? tx.paymentMode : utils.inferPaymentMode(tx);
                 this.data.transactions.push({ ...tx, paymentMode, id: utils.uid(), timestamp: Date.now() });
                 this.save();
+                if (typeof audio !== 'undefined') audio.playSuccess();
             }
 
             addTransactionsBatch(txs) {
@@ -989,6 +1428,7 @@
                     this.data.transactions.push({ ...tx, paymentMode, id: utils.uid(), timestamp: base + idx });
                 });
                 this.save();
+                if (typeof audio !== 'undefined') audio.playSuccess();
             }
 
             deleteTransaction(id) {
@@ -1269,6 +1709,17 @@
                 });
 
                 // Mobile Nav
+                const mobileActiveMap = {
+                    dashboard: 'dashboard',
+                    transactions: 'transactions',
+                    smartSave: 'smartSave',
+                    loans: 'more',
+                    creditCards: 'more',
+                    insurance: 'more',
+                    analytics: 'more'
+                };
+                const activeMobileTab = mobileActiveMap[view] || 'more';
+
                 document.querySelectorAll('.mobile-nav-item').forEach(el => {
                     const id = el.id.replace('mobile-nav-', '');
                     const dot = el.querySelector('.active-dot');
@@ -1276,17 +1727,28 @@
                     
                     // Reset
                     el.classList.remove('text-text-main', 'bg-surface');
-                    Object.values(colors).forEach(c => el.classList.remove(c));
+                    Object.values(colors).forEach(c => {
+                        el.classList.remove(c);
+                        if (label) label.classList.remove(c);
+                    });
                     if(label) label.classList.remove('text-text-main');
                     
-                    if(id === view) {
+                    if(id === activeMobileTab) {
+                        const activeColorClass = colors[view] || 'text-primary';
                         el.classList.remove('text-text-muted');
-                        el.classList.add(colors[view], 'bg-surface', 'shadow-md');
-                        if(dot) dot.classList.remove('opacity-0');
-                        if(label) label.classList.add(colors[view]);
+                        el.classList.add(activeColorClass, 'bg-surface', 'shadow-md');
+                        if(dot) {
+                            dot.classList.remove('opacity-0');
+                            const bgClass = activeColorClass.replace('text-', 'bg-');
+                            dot.className = `w-2.5 h-2.5 rounded-full absolute -top-1.5 transition-opacity active-dot ${bgClass}`;
+                        }
+                        if(label) label.classList.add(activeColorClass);
                     } else {
                         el.classList.add('text-text-muted');
-                        if(dot) dot.classList.add('opacity-0');
+                        if(dot) {
+                            dot.classList.add('opacity-0');
+                            dot.className = `w-2.5 h-2.5 rounded-full absolute -top-1.5 transition-opacity active-dot bg-primary`;
+                        }
                     }
                 });
                 
@@ -1512,7 +1974,7 @@
                             </div>
                         ` : items.map(p => `
                             <div class="bg-surface rounded-2xl p-6 shadow-sm border border-border-subtle relative overflow-hidden group cred-card">
-                                <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="absolute top-0 right-0 p-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10">
                                     <button onclick="store.deleteInsurance('${p.id}')" class="text-primary hover:text-primary"><i class="fa-solid fa-trash"></i></button>
                                 </div>
                                 <div class="flex justify-between items-start mb-4">
@@ -1640,7 +2102,7 @@
                                     </div>
                                 </div>
                                 
-                                <button onclick="store.deleteCreditCard('${card.id}')" class="absolute top-4 right-4 text-text-muted hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="store.deleteCreditCard('${card.id}')" class="absolute top-4 right-4 text-text-muted hover:text-primary opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -1652,6 +2114,10 @@
             },
 
             dashboard: () => {
+                if (typeof notificationManager !== 'undefined') {
+                    notificationManager.runCheck();
+                }
+
                 const txs = store.getTransactionsByMonth(currentMonth);
                 const allTxs = [...(store.data.transactions || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
                 const recentIncome = allTxs.filter(t => t.type === 'income').slice(0, 5);
@@ -1682,12 +2148,60 @@
                 const savings = income - expense - totalEmi;
                 const savingsRate = income > 0 ? ((savings / income) * 100).toFixed(1) : 0;
 
+                const activeAlerts = (typeof alerts !== 'undefined') ? alerts.getActiveAlerts() : [];
+                
+                // Show browser notifications permission request banner if status is default
+                let requestBannerHtml = '';
+                if (window.Notification && Notification.permission === 'default') {
+                    requestBannerHtml = `
+                        <div class="bg-gradient-to-r from-primary/10 to-[#8b5cf6]/10 p-4 rounded-2xl border border-primary/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 animate-fade-in-up">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-primary/15 text-primary flex items-center justify-center text-lg flex-shrink-0">
+                                    <i class="fa-solid fa-bell"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-text-main font-sans tracking-wide uppercase text-xs">Enable Payment Alerts</h4>
+                                    <p class="text-xs text-text-muted mt-0.5 font-sans">Receive push notifications for payment due dates and daily track reminders.</p>
+                                </div>
+                            </div>
+                            <button onclick="notificationManager.requestPermission().then(granted => { if(granted) { alert('Notifications Enabled!'); app.refresh(); } })" class="px-5 py-2 bg-primary text-white text-xs font-bold rounded-xl hover:bg-indigo-600 transition-all font-sans uppercase tracking-wider active:scale-95 flex-shrink-0">Enable Alerts</button>
+                        </div>
+                    `;
+                }
+
+                let alertHtml = '';
+                if (activeAlerts.length > 0) {
+                    alertHtml = `
+                        <div class="space-y-3">
+                            ${activeAlerts.map(alert => `
+                                <div class="flex items-start sm:items-center justify-between p-4 rounded-2xl border ${alert.bg} ${alert.border} transition-all duration-300 animate-fade-in-up">
+                                    <div class="flex items-start sm:items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-surface border border-border-subtle flex items-center justify-center text-lg ${alert.color} flex-shrink-0 shadow-sm">
+                                            <i class="fa-solid ${alert.icon}"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-text-main font-sans tracking-wide uppercase text-xs">${alert.title}</h4>
+                                            <p class="text-xs text-text-muted mt-0.5 font-sans">${alert.desc}</p>
+                                        </div>
+                                    </div>
+                                    ${alert.id === 'daily-expense' ? `
+                                        <button onclick="ui.openTransactionModal()" class="ml-4 px-3 py-1.5 bg-primary text-white text-[10px] font-bold rounded-lg hover:bg-indigo-600 transition-all font-sans uppercase tracking-wider flex-shrink-0 active:scale-95">Record Now</button>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
                 const html = `
                     <div class="w-full space-y-8 animate-fade-in-up">
                         <!-- Daily Quote -->
                         <div class="bg-gradient-to-r from-primary/10 to-secondary/10 p-4 rounded-xl border border-primary/20 text-center mb-2">
                             <p class="text-sm font-bold text-text-main italic font-sans"><i class="fa-solid fa-quote-left text-primary/40 mr-2"></i> ${utils.getRandomTip('general')} <i class="fa-solid fa-quote-right text-primary/40 ml-2"></i></p>
                         </div>
+
+                        ${requestBannerHtml}
+                        ${alertHtml}
 
                         <!-- Hero Section -->
                         <div class="relative overflow-hidden rounded-3xl cred-card p-4 md:p-8 border border-border-subtle">
@@ -2120,7 +2634,7 @@
                     const { loan, details } = item;
                     return `
                         <div class="cred-card p-6 group ${!isActive ? 'opacity-60 grayscale hover:grayscale-0 transition-all' : 'hover:border-[#4f46e5] transition-colors'}">
-                            <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-3 z-10">
+                            <div class="absolute top-0 right-0 p-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex gap-3 z-10">
                                 ${isActive ? `<button onclick="ui.openEditLoanModal('${loan.id}')" class="text-text-muted hover:text-secondary"><i class="fa-solid fa-pen"></i></button>` : ''}
                                 <button onclick="store.deleteLoan('${loan.id}')" class="text-text-muted hover:text-primary"><i class="fa-solid fa-trash"></i></button>
                             </div>
@@ -2721,6 +3235,40 @@
                 container.classList.add('opacity-0', 'scale-95');
                 setTimeout(() => modal.classList.add('hidden'), 300);
             },
+            // --- Mobile Menu Drawer ---
+            openMobileMenu: () => {
+                const overlay = document.getElementById('mobile-menu-overlay');
+                const sheet = document.getElementById('mobile-menu-sheet');
+                if (!overlay || !sheet) return;
+                
+                // Sync theme icon in drawer
+                const isDark = document.body.classList.contains('dark');
+                const drawerIcon = document.getElementById('drawer-theme-icon');
+                if (drawerIcon) {
+                    drawerIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                }
+
+                overlay.classList.remove('hidden');
+                // Trigger reflow
+                void overlay.offsetWidth;
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('opacity-100');
+                sheet.classList.remove('translate-y-full');
+                sheet.classList.add('translate-y-0');
+            },
+            closeMobileMenu: () => {
+                const overlay = document.getElementById('mobile-menu-overlay');
+                const sheet = document.getElementById('mobile-menu-sheet');
+                if (!overlay || !sheet) return;
+                
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+                sheet.classList.remove('translate-y-0');
+                sheet.classList.add('translate-y-full');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 250);
+            },
             // --- User Management UI ---
             openUserModal: (canClose = false) => {
                 const overlay = document.getElementById('user-mgmt-overlay');
@@ -2774,7 +3322,7 @@
                             <p class="text-[10px] text-text-muted uppercase tracking-widest font-bold">${isActive ? 'Active Now' : 'Last Active: ' + utils.formatDate(user.created)}</p>
                         </div>
                         ${isActive ? '' : `
-                        <button onclick="ui.deleteUser('${user.id}')" class="delete-btn absolute top-3 right-3 w-8 h-8 rounded-full bg-hover text-text-muted hover:bg-danger hover:text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100" title="Delete Profile">
+                        <button onclick="ui.deleteUser('${user.id}')" class="delete-btn absolute top-3 right-3 w-8 h-8 rounded-full bg-hover text-text-muted hover:bg-danger hover:text-white flex items-center justify-center transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100" title="Delete Profile">
                             <i class="fa-solid fa-trash-can text-xs"></i>
                         </button>
                         `}
@@ -2822,12 +3370,16 @@
                 
                 const btn = document.getElementById('theme-toggle-btn');
                 const mobileIcon = document.getElementById('mobile-theme-icon');
+                const drawerIcon = document.getElementById('drawer-theme-icon');
                 
                 if (btn) {
                     btn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
                 }
                 if (mobileIcon) {
                     mobileIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                }
+                if (drawerIcon) {
+                    drawerIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
                 }
                 
                 if (typeof updateChartColors === 'function') updateChartColors();
@@ -2839,6 +3391,7 @@
                 }
                 const btn = document.getElementById('theme-toggle-btn');
                 const mobileIcon = document.getElementById('mobile-theme-icon');
+                const drawerIcon = document.getElementById('drawer-theme-icon');
                 const isDark = document.body.classList.contains('dark');
                 
                 if (btn) {
@@ -2846,6 +3399,9 @@
                 }
                 if (mobileIcon) {
                     mobileIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                }
+                if (drawerIcon) {
+                    drawerIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
                 }
                 
                 if (typeof updateChartColors === 'function') updateChartColors();
@@ -4581,6 +5137,171 @@
                     </form>
                 `;
                 ui.openModal();
+            },
+            openSettingsModal: () => {
+                const s = store.data.settings || { currency: 'INR', monthlyTarget: 50000 };
+                const notif = s.notifications || {
+                    dailyReminder: true,
+                    dailyReminderTime: '20:00',
+                    paymentDueReminder: true,
+                    paymentReminderDaysBefore: 3
+                };
+                
+                document.getElementById('modal-title').innerText = 'App Settings';
+                document.getElementById('modal-body').innerHTML = `
+                    <form onsubmit="app.handleSaveSettings(event)" class="space-y-4 text-text-muted">
+                        <div>
+                            <h4 class="text-xs font-bold text-primary uppercase tracking-widest mb-3 font-sans">General Config</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-text-muted uppercase tracking-widest mb-1 font-sans">Currency Symbol</label>
+                                    <select name="currency" class="w-full px-4 py-2 border border-border-subtle rounded-lg bg-hover text-text-main focus:ring-2 focus:ring-primary outline-none font-sans">
+                                        <option value="INR" ${s.currency === 'INR' ? 'selected' : ''}>INR (₹)</option>
+                                        <option value="USD" ${s.currency === 'USD' ? 'selected' : ''}>USD ($)</option>
+                                        <option value="EUR" ${s.currency === 'EUR' ? 'selected' : ''}>EUR (€)</option>
+                                        <option value="GBP" ${s.currency === 'GBP' ? 'selected' : ''}>GBP (£)</option>
+                                        <option value="JPY" ${s.currency === 'JPY' ? 'selected' : ''}>JPY (¥)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-text-muted uppercase tracking-widest mb-1 font-sans">Monthly Target</label>
+                                    <input type="number" name="monthlyTarget" required value="${s.monthlyTarget}" class="w-full px-4 py-2 border border-border-subtle rounded-lg bg-hover text-text-main focus:ring-2 focus:ring-primary outline-none font-sans" placeholder="50000">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-border-subtle pt-4">
+                            <h4 class="text-xs font-bold text-primary uppercase tracking-widest mb-3 font-sans">Notifications & Reminders</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-hover rounded-xl border border-border-subtle text-xs">
+                                    <span class="font-bold text-text-muted uppercase tracking-wider font-sans">Browser Notifications</span>
+                                    <span id="notif-permission-badge" class="px-2 py-0.5 rounded font-bold uppercase tracking-widest">
+                                        ${Notification.permission === 'granted' ? 'Enabled' : (Notification.permission === 'denied' ? 'Blocked' : 'Not Requested')}
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center gap-3 p-3 bg-hover rounded-xl border border-border-subtle">
+                                    <input type="checkbox" name="dailyReminder" id="setting-daily-reminder" ${notif.dailyReminder ? 'checked' : ''} class="w-5 h-5 text-primary rounded focus:ring-primary bg-surface border-border-subtle">
+                                    <label for="setting-daily-reminder" class="text-xs font-bold text-text-main cursor-pointer select-none uppercase tracking-wide font-sans">Daily Expense Reminder</label>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4 pl-8">
+                                    <div>
+                                        <label class="block text-xs font-bold text-text-muted uppercase tracking-widest mb-1 font-sans">Reminder Time</label>
+                                        <input type="time" name="dailyReminderTime" value="${notif.dailyReminderTime || '20:00'}" class="w-full px-4 py-2 border border-border-subtle rounded-lg bg-hover text-text-main focus:ring-2 focus:ring-primary outline-none font-sans">
+                                    </div>
+                                    <div>
+                                        <button type="button" onclick="notificationManager.requestPermission().then(granted => { alert(granted ? 'Permission Granted!' : 'Permission Denied / Blocked'); ui.openSettingsModal(); })" class="w-full mt-5 py-2.5 rounded-lg border border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all text-[10px] uppercase tracking-wider font-sans">
+                                            Request Push
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-3 p-3 bg-hover rounded-xl border border-border-subtle">
+                                    <input type="checkbox" name="paymentDueReminder" id="setting-payment-reminder" ${notif.paymentDueReminder ? 'checked' : ''} class="w-5 h-5 text-primary rounded focus:ring-primary bg-surface border-border-subtle">
+                                    <label for="setting-payment-reminder" class="text-xs font-bold text-text-main cursor-pointer select-none uppercase tracking-wide font-sans">Payment Due Reminders</label>
+                                </div>
+
+                                <div class="pl-8">
+                                    <label class="block text-xs font-bold text-text-muted uppercase tracking-widest mb-1 font-sans">Days before due date to notify</label>
+                                    <input type="number" min="1" max="10" name="paymentReminderDaysBefore" value="${notif.paymentReminderDaysBefore || 3}" class="w-24 px-4 py-2 border border-border-subtle rounded-lg bg-hover text-text-main focus:ring-2 focus:ring-primary outline-none font-sans">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-border-subtle pt-4 flex gap-4">
+                            <button type="button" onclick="ui.deleteAllTransactions()" class="py-2.5 px-4 rounded-xl border border-danger/30 text-danger font-bold hover:bg-danger/10 transition-all font-sans uppercase tracking-wider text-xs">
+                                Clear Data
+                            </button>
+                            <button type="submit" class="flex-1 py-3 bg-primary text-white font-bold rounded-full hover:bg-indigo-600 shadow-lg shadow-indigo-500/25 transition-all transform active:scale-95 font-sans uppercase tracking-widest">
+                                Save Settings
+                            </button>
+                        </div>
+                    </form>
+                `;
+                
+                const badge = document.getElementById('notif-permission-badge');
+                if (badge) {
+                    if (Notification.permission === 'granted') {
+                        badge.className += ' bg-success/10 text-success border border-success/20';
+                    } else if (Notification.permission === 'denied') {
+                        badge.className += ' bg-danger/10 text-danger border border-danger/20';
+                    } else {
+                        badge.className += ' bg-amber-500/10 text-amber-500 border border-amber-500/20';
+                    }
+                }
+                
+                ui.openModal();
+            },
+            openBackupModal: () => {
+                document.getElementById('modal-title').innerText = 'Backup & Recovery';
+                document.getElementById('modal-body').innerHTML = `
+                    <div class="space-y-6 text-text-muted">
+                        <div>
+                            <h4 class="text-xs font-bold text-primary uppercase tracking-widest mb-2 font-sans">Export App Data</h4>
+                            <p class="text-xs text-text-muted mb-3 font-sans">Download your current profile data (transactions, cards, goals, etc.) as a JSON file to save as a local backup.</p>
+                            <button onclick="app.exportBackupData()" class="w-full py-3 bg-primary hover:bg-[#4338ca] text-white font-bold rounded-xl transition-all shadow-md active:scale-95 uppercase tracking-wider font-sans text-xs">
+                                <i class="fa-solid fa-file-export mr-2"></i> Export Data (JSON)
+                            </button>
+                        </div>
+
+                        <div class="border-t border-border-subtle pt-6">
+                            <h4 class="text-xs font-bold text-secondary uppercase tracking-widest mb-2 font-sans">Import Data Backup</h4>
+                            <p class="text-xs text-text-muted mb-3 font-sans">Upload a previously exported ProFinance JSON backup. Note: This will overwrite your current profile data.</p>
+                            <div class="relative">
+                                <input type="file" id="backup-file-input" accept=".json" onchange="app.importBackupData(event)" class="w-full px-4 py-3 border border-border-subtle rounded-xl bg-hover text-text-main focus:ring-2 focus:ring-primary outline-none font-sans text-xs">
+                            </div>
+                        </div>
+
+                        ${store.hasLegacyData() ? `
+                        <div class="border-t border-border-subtle pt-6">
+                            <h4 class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-2 font-sans">Legacy Migration</h4>
+                            <p class="text-xs text-text-muted mb-3 font-sans">Import transaction history found from an older, single-user version of the ProFinance app.</p>
+                            <button onclick="if(confirm('This will overwrite current profile data. Continue?')) { if(store.importLegacyData()) { alert('Data Recovered!'); location.reload(); } else { alert('Recovery Failed'); } }" class="w-full py-3 border border-amber-500/30 text-amber-500 hover:bg-amber-500/10 font-bold rounded-xl transition-all uppercase tracking-wider font-sans text-xs">
+                                Recover Legacy Data
+                            </button>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                ui.openModal();
+            },
+            openFinanceTipsModal: () => {
+                document.getElementById('modal-title').innerText = 'Financial Tips & Wisdom';
+                
+                const savingsTips = financeTips.savings.map(t => `<li class="flex items-start gap-2.5 text-xs text-text-main"><i class="fa-solid fa-circle-check text-[#10b981] mt-0.5"></i> <span>${t}</span></li>`).join('');
+                const debtTips = financeTips.debt.map(t => `<li class="flex items-start gap-2.5 text-xs text-text-main"><i class="fa-solid fa-triangle-exclamation text-danger mt-0.5"></i> <span>${t}</span></li>`).join('');
+                const investTips = financeTips.investing.map(t => `<li class="flex items-start gap-2.5 text-xs text-text-main"><i class="fa-solid fa-chart-line text-[#0ea5e9] mt-0.5"></i> <span>${t}</span></li>`).join('');
+                
+                document.getElementById('modal-body').innerHTML = `
+                    <div class="space-y-6 text-text-muted font-sans">
+                        <div>
+                            <h4 class="text-xs font-bold text-[#10b981] uppercase tracking-widest mb-2 font-sans"><i class="fa-solid fa-piggy-bank mr-1"></i> Saving Strategy</h4>
+                            <ul class="space-y-2">
+                                ${savingsTips}
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t border-border-subtle pt-4">
+                            <h4 class="text-xs font-bold text-danger uppercase tracking-widest mb-2 font-sans"><i class="fa-solid fa-credit-card mr-1"></i> Managing Debt</h4>
+                            <ul class="space-y-2">
+                                ${debtTips}
+                            </ul>
+                        </div>
+
+                        <div class="border-t border-border-subtle pt-4">
+                            <h4 class="text-xs font-bold text-[#0ea5e9] uppercase tracking-widest mb-2 font-sans"><i class="fa-solid fa-chart-pie mr-1"></i> Smart Investing</h4>
+                            <ul class="space-y-2">
+                                ${investTips}
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-primary/10 to-secondary/10 p-4 rounded-xl border border-primary/20 text-center">
+                            <p class="text-xs text-text-main font-bold italic"><i class="fa-solid fa-quote-left text-primary/30 mr-1"></i> The best investment you can make is in yourself. <i class="fa-solid fa-quote-right text-primary/30 ml-1"></i></p>
+                        </div>
+                    </div>
+                `;
+                ui.openModal();
             }
         };
 
@@ -4605,6 +5326,80 @@
             handleUserLogout: () => {
                 store.logout();
             },
+            handleSaveSettings: (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const fd = new FormData(form);
+                
+                const prevCurrency = store.data.settings?.currency || 'INR';
+                const currency = fd.get('currency');
+                const monthlyTarget = parseFloat(fd.get('monthlyTarget')) || 50000;
+                const dailyReminder = form.querySelector('[name="dailyReminder"]').checked;
+                const dailyReminderTime = fd.get('dailyReminderTime') || '20:00';
+                const paymentDueReminder = form.querySelector('[name="paymentDueReminder"]').checked;
+                const paymentReminderDaysBefore = parseInt(fd.get('paymentReminderDaysBefore')) || 3;
+                
+                store.data.settings = {
+                    currency,
+                    monthlyTarget,
+                    notifications: {
+                        dailyReminder,
+                        dailyReminderTime,
+                        paymentDueReminder,
+                        paymentReminderDaysBefore
+                    }
+                };
+                
+                store.save();
+                
+                // If currency changed, reload page to refresh dynamic formatting
+                if (currency !== prevCurrency) {
+                    alert("Settings saved! Reloading to apply currency formatting...");
+                    location.reload();
+                } else {
+                    alert("Settings saved successfully!");
+                    ui.closeModal();
+                    app.refresh();
+                }
+            },
+            
+            exportBackupData: () => {
+                try {
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(store.data));
+                    const downloadAnchor = document.createElement('a');
+                    downloadAnchor.setAttribute("href", dataStr);
+                    downloadAnchor.setAttribute("download", `ProFinance_Backup_${store.data.auth?.user || 'User'}_${new Date().toISOString().split('T')[0]}.json`);
+                    document.body.appendChild(downloadAnchor);
+                    downloadAnchor.click();
+                    downloadAnchor.remove();
+                } catch (err) {
+                    alert("Failed to export backup: " + err.message);
+                }
+            },
+            
+            importBackupData: (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    try {
+                        const imported = JSON.parse(evt.target.result);
+                        if (imported.transactions && imported.settings) {
+                            if (confirm("This will overwrite all active transactions, cards, loans, and settings. Are you sure you want to proceed?")) {
+                                store.data = imported;
+                                store.save();
+                                alert("Data imported successfully!");
+                                location.reload();
+                            }
+                        } else {
+                            alert("Invalid backup file structure! Please use a valid ProFinance JSON backup.");
+                        }
+                    } catch (err) {
+                        alert("Failed to parse JSON backup file: " + err.message);
+                    }
+                };
+                reader.readAsText(file);
+            },
             init: () => {
                 ui.initTheme();
                 
@@ -4622,6 +5417,13 @@
                     
                     router.navigate('dashboard');
                     app.processRecurring();
+                    
+                    // Initialize Notification checks
+                    if (typeof notificationManager !== 'undefined') {
+                        notificationManager.runCheck();
+                        if (window.notifInterval) clearInterval(window.notifInterval);
+                        window.notifInterval = setInterval(() => notificationManager.runCheck(), 60000);
+                    }
                     
                     // Check for lost data
                     if ((store.data.transactions || []).length === 0 && (store.data.loans || []).length === 0 && store.hasLegacyData()) {
